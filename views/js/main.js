@@ -43,8 +43,8 @@ function renderizar(data) {
   const html = data
     .map((elem, index) => {
       return `<div>
-            <strong style="color: blue">${elem.author}</strong>:
-            <bdi style="color: brown">[${elem.date}]</bdi>
+            <strong style="color: blue">${elem.author}</strong>
+            <bdi style="color: brown">[${elem.date}]</bdi>:
             <em style="color: green">${elem.text}</em> 
               </div>`
     })
@@ -56,11 +56,21 @@ socket.on('messages', function (data) {
   renderizar(data)
 })
 
+function fechaMensaje() {
+  let date = new Date();
+  let fecha = date.getFullYear() + "/" + (date.getMonth() +1) + "/" + 
+  date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+  return fecha;
+}
+
 function addMessage(e) {
+
+  let fecha = fechaMensaje()
+
   const mensaje = {
     author: document.getElementById('email').value,
     text: document.getElementById('texto').value,
-    date: new Date(),
+    date: fecha,
   }
   socket.emit('new-message', mensaje)
   return false
