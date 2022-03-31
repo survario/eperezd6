@@ -24,7 +24,7 @@ const messages = [
   ]
 
 const productos = [
-    { title: 'Libro', price: 5, thumbnail: 'foto,jpg'}
+    { title: 'Libro', price: 5, thumbnail: 'https://www.iconfinder.com/icons/4488274/book_education_library_open_school_study_icon'}
 ]
 
 io.on('connection', (socket) => {
