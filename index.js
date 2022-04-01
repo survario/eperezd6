@@ -17,17 +17,11 @@ app.use(express.static('./views'))
 
 httpServer.listen(8080, () => console.log('Servidor Levantado'))
 
-const messages = [
-    { author: 'juan@coder,com', text: '¡Hola! ¿Que tal?' },
-    { author: 'pedro@coder.com', text: '¡Muy bien! ¿Y vos?' },
-    { author: 'ana@coder.com', text: '¡Genial!' },
-  ]
-
 const productos = [
     { title: 'Libro', price: 5, thumbnail: 'https://cdn3.iconfinder.com/data/icons/education-science-vol-1-1/512/reading_book_read_learn-512.png'}
 ]
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
     console.log('Un cliente se ha conectado')
 
     socket.emit('productos', productos)
@@ -39,12 +33,16 @@ io.on('connection', (socket) => {
         io.sockets.emit('productos', productos)
     })
 
+    const response = await fs.promises.readFile('./mensajes.txt', 'utf-8');
+    const messages = JSON.parse(response);
+
     socket.emit('messages', messages)
     socket.on('notificacion',(data) => {
         console.log(data)
     })
-    socket.on('new-message', (data) => {
+    socket.on('new-message', async (data) => {
         messages.push(data)
+        await fs.promises.writeFile('./mensajes.txt', JSON.stringify(messages, null, 2));
         io.sockets.emit('messages', messages)
     })
 })
